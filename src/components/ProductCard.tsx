@@ -26,17 +26,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   // Get all available images for this product
-  // Get optimized images based on usage
+    // Get optimized images based on usage
   const optimizationPreset = showCarousel ? ImagePresets.detail : ImagePresets.card;
   const optimizedImages = ImageOptimizer.getOptimizedProductImages(
-    product.image, 
-    product.image2, 
+    product.image,
+    product.image2,
     optimizationPreset
   );
-  
-  // Create array of images for carousel
+
+  // Create array of images for carousel - ONLY if there's actually a second image
   const images = [optimizedImages.image1];
-  if (optimizedImages.image2 && (showCarousel || enableImageToggle)) {
+  if (product.image2 && optimizedImages.image2 && (showCarousel || enableImageToggle)) {
     images.push(optimizedImages.image2);
   }
 
@@ -57,13 +57,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const nextImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    if (images.length > 1) {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }
   };
 
   const prevImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    if (images.length > 1) {
+      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    }
   };
 
   const handleImageLoad = () => {
@@ -78,15 +82,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   // Touch event handlers for mobile swipe
   const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX);
+    // Only enable touch for products with multiple images
+    if (images.length > 1) {
+      setTouchStart(e.targetTouches[0].clientX);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    // Only enable touch for products with multiple images
+    if (images.length > 1) {
+      setTouchEnd(e.targetTouches[0].clientX);
+    }
   };
 
   const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    // Only process touch for products with multiple images
+    if (!touchStart || !touchEnd || images.length <= 1) return;
     
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
@@ -107,8 +118,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
   useEffect(() => {
     setIsImageLoaded(false);
     setIsImageError(false);
+    // Always start with first image, and ensure single-image products stay at index 0
     setCurrentImageIndex(0);
-  }, [product.id]);
+  }, [product.id, product.image2]);
 
   // Placeholder image for errors
   const placeholderImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgMTUwTDIwMCAxMDBMMzAwIDE1MEwyMDAgMjAwTDEwMCAxNTBaIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOUI5QkEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPgo=';
@@ -119,9 +131,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Link to={`/product/${product.id}`}>
           <div 
             className="relative overflow-hidden product-card-image-toggle"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            onTouchStart={images.length > 1 ? handleTouchStart : undefined}
+            onTouchMove={images.length > 1 ? handleTouchMove : undefined}
+            onTouchEnd={images.length > 1 ? handleTouchEnd : undefined}
           >
             {/* Fast Image Hover Preview - Both images preloaded */}
             <div className="relative w-full h-48 bg-gray-50 overflow-hidden" role="img" aria-label={`${product.name} product images`}>
@@ -209,9 +221,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <Link to={`/product/${product.id}`}>
         <div 
           className="relative overflow-hidden product-card-image-toggle bg-gray-50"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          onTouchStart={images.length > 1 ? handleTouchStart : undefined}
+          onTouchMove={images.length > 1 ? handleTouchMove : undefined}
+          onTouchEnd={images.length > 1 ? handleTouchEnd : undefined}
         >
           {/* Fast Image Hover Preview - Both images preloaded */}
           <div className="relative w-full h-56 sm:h-64 md:h-72 bg-gray-50 overflow-hidden" role="img" aria-label={`${product.name} product images`}>
