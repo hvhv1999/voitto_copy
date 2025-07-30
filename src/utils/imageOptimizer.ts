@@ -16,10 +16,10 @@ export class ImageOptimizer {
     
     const {
       width = 400,
-      height = 300,
+      height = 400,
       quality = 80,
       format = 'webp',
-      crop = 'fill'
+      crop = 'fit'
     } = options;
 
     // Parse Cloudinary URL
@@ -27,6 +27,13 @@ export class ImageOptimizer {
     const uploadIndex = urlParts.findIndex(part => part === 'upload');
     
     if (uploadIndex === -1) return url;
+    
+    // Check if optimization parameters already exist
+    const existingParams = urlParts[uploadIndex + 1];
+    if (existingParams && existingParams.includes('f_')) {
+      // URL already optimized, return as is
+      return url;
+    }
     
     // Insert optimization parameters
     const optimizedParams = `f_${format},q_${quality},w_${width},h_${height},c_${crop}`;
@@ -98,19 +105,19 @@ export class ImageOptimizer {
 
 // Predefined optimization presets
 export const ImagePresets = {
-  // For product cards (smaller, faster loading)
+  // For product cards (optimized for better visibility)
   card: {
     width: 400,
-    height: 300,
-    quality: 75,
+    height: 400,
+    quality: 80,
     format: 'webp' as const,
-    crop: 'fill' as const
+    crop: 'fit' as const
   },
   
   // For product detail pages (larger, higher quality)
   detail: {
     width: 600,
-    height: 450,
+    height: 600,
     quality: 85,
     format: 'webp' as const,
     crop: 'fit' as const
@@ -119,9 +126,9 @@ export const ImagePresets = {
   // For thumbnails (very small, very fast)
   thumbnail: {
     width: 200,
-    height: 150,
-    quality: 60,
+    height: 200,
+    quality: 70,
     format: 'webp' as const,
-    crop: 'fill' as const
+    crop: 'fit' as const
   }
 }; 

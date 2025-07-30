@@ -123,19 +123,43 @@ const ProductCard: React.FC<ProductCardProps> = ({
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <img
-              src={isImageError ? placeholderImage : images[currentImageIndex]}
-              alt={`${product.name} - Image ${currentImageIndex + 1}`}
-              className={`w-full h-40 object-cover transition-all duration-300 ${
-                isImageLoaded ? 'opacity-100' : 'opacity-0'
-              } group-hover:scale-105`}
-              loading="lazy"
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-            />
+            {/* Fast Image Hover Preview - Both images preloaded */}
+            <div className="relative w-full h-48 bg-gray-50 overflow-hidden" role="img" aria-label={`${product.name} product images`}>
+              {/* Primary Image */}
+              <img
+                src={isImageError ? placeholderImage : images[0]}
+                alt={`${product.name} - Front View`}
+                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-150 ${
+                  isImageLoaded ? 'opacity-100' : 'opacity-0'
+                } ${currentImageIndex === 0 ? 'opacity-100' : 'opacity-0'} group-hover:scale-105`}
+                loading="lazy"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+                width="400"
+                height="400"
+                decoding="async"
+              />
+              
+              {/* Secondary Image (if exists) */}
+              {images.length > 1 && (
+                <img
+                  src={isImageError ? placeholderImage : images[1]}
+                  alt={`${product.name} - Back View`}
+                  className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-150 ${
+                    isImageLoaded ? 'opacity-100' : 'opacity-0'
+                  } ${currentImageIndex === 1 ? 'opacity-100' : 'opacity-0'} group-hover:scale-105`}
+                  loading="lazy"
+                  onLoad={handleImageLoad}
+                  onError={handleImageError}
+                  width="400"
+                  height="400"
+                  decoding="async"
+                />
+              )}
+            </div>
             {!isImageLoaded && !isImageError && (
-              <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+              <div className="absolute inset-0 bg-gray-50 animate-shimmer flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
               </div>
             )}
             
@@ -168,7 +192,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
 
           <div className="p-3">
-            <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors">
+            <h3 className="text-sm font-semibold text-gray-800 line-clamp-1 group-hover:text-blue-600 transition-colors">
               {product.name}
             </h3>
             <p className="text-lg font-bold text-black mt-1">
@@ -184,27 +208,50 @@ const ProductCard: React.FC<ProductCardProps> = ({
     <div className="bg-white rounded-3xl shadow-lg overflow-hidden max-w-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] relative group">
       <Link to={`/product/${product.id}`}>
         <div 
-          className="relative overflow-hidden product-card-image-toggle"
+          className="relative overflow-hidden product-card-image-toggle bg-gray-50"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Main Image */}
-          <img
-            src={isImageError ? placeholderImage : images[currentImageIndex]}
-            alt={`${product.name} - Image ${currentImageIndex + 1}`}
-            className={`w-full h-64 object-cover transition-all duration-500 ${
-              isImageLoaded ? 'opacity-100' : 'opacity-0'
-            } group-hover:scale-105`}
-            loading="lazy"
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-          />
+          {/* Fast Image Hover Preview - Both images preloaded */}
+          <div className="relative w-full h-72 bg-gray-50 overflow-hidden" role="img" aria-label={`${product.name} product images`}>
+            {/* Primary Image */}
+            <img
+              src={isImageError ? placeholderImage : images[0]}
+              alt={`${product.name} - Front View`}
+              className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-150 ${
+                isImageLoaded ? 'opacity-100' : 'opacity-0'
+              } ${currentImageIndex === 0 ? 'opacity-100' : 'opacity-0'} group-hover:scale-105`}
+              loading="lazy"
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              width="600"
+              height="600"
+              decoding="async"
+            />
+            
+            {/* Secondary Image (if exists) */}
+            {images.length > 1 && (
+              <img
+                src={isImageError ? placeholderImage : images[1]}
+                alt={`${product.name} - Back View`}
+                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-150 ${
+                  isImageLoaded ? 'opacity-100' : 'opacity-0'
+                } ${currentImageIndex === 1 ? 'opacity-100' : 'opacity-0'} group-hover:scale-105`}
+                loading="lazy"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+                width="600"
+                height="600"
+                decoding="async"
+              />
+            )}
+          </div>
 
           {/* Loading Spinner */}
           {!isImageLoaded && !isImageError && (
-            <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-              <div className="w-12 h-12 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 bg-gray-50 animate-shimmer flex items-center justify-center">
+              <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
             </div>
           )}
 
@@ -293,13 +340,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-1">
             {product.name}
           </h3>
           <p className="text-xl font-bold text-black mt-1">
             {product.price === 0 ? 'Contact for pricing' : formatPrice(product.price)}
           </p>
-          <p className="text-sm text-gray-500 mt-2 line-clamp-2">
+          <p className="text-sm text-gray-500 mt-2 line-clamp-1">
             {product.description}
           </p>
 

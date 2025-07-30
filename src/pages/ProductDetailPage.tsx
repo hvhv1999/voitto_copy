@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ShoppingCart, Star, Truck, Shield, ArrowLeft, Plus, Minus } from 'lucide-react';
+import { Star, Truck, Shield, ArrowLeft, Plus, Minus } from 'lucide-react';
 import { products } from '../data/products';
-import { useCart } from '../contexts/CartContext';
+
 import ProductCard from '../components/ProductCard';
 
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
-  const { dispatch } = useCart();
+
 
   const product = products.find(p => p.id === id);
 
@@ -25,11 +25,7 @@ const ProductDetailPage: React.FC = () => {
     );
   }
 
-  const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      dispatch({ type: 'ADD_ITEM', product });
-    }
-  };
+
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-KE', {

@@ -1,7 +1,7 @@
 import React from 'react';
 import AnimatedCounter from '../components/AnimatedCounter';
 import ProductCarousel from '../components/ProductCarousel';
-import { Award, Users, Truck, Shield, Clock, MapPin } from 'lucide-react';
+import { Award, Users, Truck, Shield } from 'lucide-react';
 
 const featuredProducts = [
   {
