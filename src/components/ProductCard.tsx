@@ -195,7 +195,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <h3 className="text-sm font-semibold text-gray-800 line-clamp-1 group-hover:text-blue-600 transition-colors">
               {product.name}
             </h3>
-            <p className="text-lg font-bold text-black mt-1">
+            <p className="text-base sm:text-lg font-bold text-black mt-1">
               {product.price === 0 ? 'Contact for pricing' : formatPrice(product.price)}
             </p>
           </div>
@@ -205,7 +205,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-3xl shadow-lg overflow-hidden max-w-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] relative group">
+    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg overflow-hidden max-w-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] relative group">
       <Link to={`/product/${product.id}`}>
         <div 
           className="relative overflow-hidden product-card-image-toggle bg-gray-50"
@@ -214,7 +214,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           onTouchEnd={handleTouchEnd}
         >
           {/* Fast Image Hover Preview - Both images preloaded */}
-          <div className="relative w-full h-72 bg-gray-50 overflow-hidden" role="img" aria-label={`${product.name} product images`}>
+          <div className="relative w-full h-56 sm:h-64 md:h-72 bg-gray-50 overflow-hidden" role="img" aria-label={`${product.name} product images`}>
             {/* Primary Image */}
             <img
               src={isImageError ? placeholderImage : images[0]}
